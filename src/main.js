@@ -414,29 +414,7 @@ async function initDashboard() {
 
 // ===== EVENT LISTENERS =====
 document.addEventListener('DOMContentLoaded', () => {
-  if (isLoggedIn()) {
-    initDashboard();
-    return;
-  }
-
-  document.getElementById('login-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value;
-
-    if (login(user, pass)) {
-      initDashboard();
-    } else {
-      const errEl = document.getElementById('login-error');
-      errEl.textContent = '❌ Sai tài khoản hoặc mật khẩu';
-      document.getElementById('password').value = '';
-      document.querySelector('.login-container').style.animation = 'none';
-      setTimeout(() => {
-        document.querySelector('.login-container').style.animation = 'shake 0.4s';
-      }, 10);
-    }
-  });
-
+  // Always attach logout & refresh (they exist in the DOM regardless)
   document.getElementById('btn-logout').addEventListener('click', logout);
 
   document.getElementById('btn-refresh').addEventListener('click', async () => {
@@ -453,6 +431,31 @@ document.addEventListener('DOMContentLoaded', () => {
       renderChart(currentTxList, btcPrice);
     }
     btn.style.animation = '';
+  });
+
+  // Check session
+  if (isLoggedIn()) {
+    initDashboard();
+    return;
+  }
+
+  // Login form
+  document.getElementById('login-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value;
+
+    if (login(user, pass)) {
+      initDashboard();
+    } else {
+      const errEl = document.getElementById('login-error');
+      errEl.textContent = '❌ Sai tài khoản hoặc mật khẩu';
+      document.getElementById('password').value = '';
+      document.querySelector('.login-container').style.animation = 'none';
+      setTimeout(() => {
+        document.querySelector('.login-container').style.animation = 'shake 0.4s';
+      }, 10);
+    }
   });
 });
 
