@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitcoin DCA Dashboard</title>
+  <meta name="description" content="Tra cứu báo cáo DCA Bitcoin cá nhân" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>" />
+</head>
+<body>
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen">
+    <div class="login-container">
+      <div class="login-logo">₿</div>
+      <h1 class="login-title">Bitcoin DCA</h1>
+      <p class="login-subtitle">Đăng nhập để xem báo cáo</p>
+      <form id="login-form">
+        <div class="input-group">
+          <label for="username">Tài khoản</label>
+          <input type="text" id="username" placeholder="Nhập tài khoản" autocomplete="username" required />
+        </div>
+        <div class="input-group">
+          <label for="password">Mật khẩu</label>
+          <input type="password" id="password" placeholder="Nhập mật khẩu" autocomplete="current-password" required />
+        </div>
+        <p id="login-error" class="login-error"></p>
+        <button type="submit" class="btn-login">Đăng nhập</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="hidden">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <span class="header-logo">₿</span>
+        <h1>Bitcoin DCA Dashboard</h1>
+      </div>
+      <div class="header-right">
+        <span id="last-updated" class="last-updated"></span>
+        <button id="btn-refresh" class="btn-icon" title="Cập nhật giá">🔄</button>
+        <button id="btn-logout" class="btn-icon" title="Đăng xuất">🚪</button>
+      </div>
+    </header>
+
+    <!-- Stats Cards -->
+    <section class="stats-grid">
+      <div class="stat-card stat-primary">
+        <div class="stat-icon">₿</div>
+        <div class="stat-info">
+          <span class="stat-label">Tổng BTC</span>
+          <span id="total-btc" class="stat-value">—</span>
+        </div>
+      </div>
+      <div class="stat-card stat-blue">
+        <div class="stat-icon">💰</div>
+        <div class="stat-info">
+          <span class="stat-label">Tổng đầu tư</span>
+          <span id="total-invested" class="stat-value">—</span>
+        </div>
+      </div>
+      <div class="stat-card stat-purple">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <span class="stat-label">Giá TB mua vào</span>
+          <span id="avg-price" class="stat-value">—</span>
+        </div>
+      </div>
+      <div class="stat-card" id="pnl-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-info">
+          <span class="stat-label">Lãi/Lỗ (VNĐ)</span>
+          <span id="pnl-value" class="stat-value">—</span>
+          <span id="pnl-percent" class="stat-percent"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Price + Value Row -->
+    <section class="price-row">
+      <div class="price-card">
+        <span class="price-label">Giá BTC hiện tại</span>
+        <span id="current-price" class="price-value">Đang tải...</span>
+      </div>
+      <div class="price-card">
+        <span class="price-label">Giá trị hiện tại (VNĐ)</span>
+        <span id="current-value-vnd" class="price-value">—</span>
+      </div>
+      <div class="price-card">
+        <span class="price-label">Tỷ giá USDT mua vào</span>
+        <span class="price-value">27,500đ</span>
+      </div>
+      <div class="price-card">
+        <span class="price-label">Số giao dịch</span>
+        <span id="tx-count" class="price-value">—</span>
+      </div>
+    </section>
+
+    <!-- Chart -->
+    <section class="chart-section">
+      <h2 class="section-title">📈 Biểu đồ giá BTC tại mỗi lần mua</h2>
+      <div class="chart-container">
+        <canvas id="price-chart"></canvas>
+      </div>
+    </section>
+
+    <!-- Transaction Table -->
+    <section class="table-section">
+      <h2 class="section-title">📋 Lịch sử giao dịch</h2>
+      <div class="table-wrapper">
+        <table id="tx-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Ngày gửi</th>
+              <th>BTC nhận</th>
+              <th>Phí gas</th>
+              <th>Tổng BTC chi</th>
+              <th>Giá BTC ($)</th>
+              <th>Chi phí (USDT)</th>
+              <th>Chi phí (VNĐ)</th>
+            </tr>
+          </thead>
+          <tbody id="tx-tbody"></tbody>
+          <tfoot id="tx-tfoot"></tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Bitcoin DCA Dashboard • Dữ liệu từ <a href="https://blockchain.info" target="_blank">blockchain.info</a> & <a href="https://coingecko.com" target="_blank">CoinGecko</a></p>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
