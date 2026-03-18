@@ -394,6 +394,19 @@ tfoot td {
 .td-cost-usd { font-weight: 600; }
 .td-cost-vnd { color: var(--accent-purple); font-weight: 600; }
 
+/* Loading Status */
+.loading-status {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+  color: var(--accent-blue);
+  text-align: center;
+  transition: opacity 0.5s;
+}
+
 /* Footer */
 .footer {
   text-align: center;
