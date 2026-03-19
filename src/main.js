@@ -61,36 +61,55 @@ function satoshiToBTC(satoshi) {
 }
 
 // ===== BLOCKCHAIN API =====
+// Use Blockstream API (supports CORS) with mempool.space as fallback
 async function fetchTransactionsFromBlockchain() {
+  // Try Blockstream API first (has CORS support)
   try {
-    const res = await fetch(`https://blockchain.info/rawaddr/${BTC_ADDRESS}?cors=true`);
-    if (!res.ok) throw new Error('API error');
+    const res = await fetch(`https://blockstream.info/api/address/${BTC_ADDRESS}/txs`);
+    if (!res.ok) throw new Error('Blockstream API error: ' + res.status);
     const data = await res.json();
-    return data.txs || [];
+    console.log('✅ Blockstream API: loaded', data.length, 'transactions');
+    return { source: 'blockstream', txs: data };
   } catch (err) {
-    console.warn('Blockchain API fetch failed:', err);
-    return null;
+    console.warn('Blockstream API failed:', err.message);
   }
+
+  // Fallback: mempool.space API (also has CORS support)
+  try {
+    const res = await fetch(`https://mempool.space/api/address/${BTC_ADDRESS}/txs`);
+    if (!res.ok) throw new Error('Mempool API error: ' + res.status);
+    const data = await res.json();
+    console.log('✅ Mempool API: loaded', data.length, 'transactions');
+    return { source: 'mempool', txs: data };
+  } catch (err) {
+    console.warn('Mempool API failed:', err.message);
+  }
+
+  return null;
 }
 
-// Parse blockchain tx to find amount received by our address
+// Parse Blockstream/Mempool tx format to find amount received by our address
 function parseTx(tx) {
-  let btcReceived = 0;
-  for (const out of tx.out) {
-    if (out.addr === BTC_ADDRESS) {
-      btcReceived += out.value;
+  let satoshiReceived = 0;
+  const outputs = tx.vout || [];
+  for (const out of outputs) {
+    if (out.scriptpubkey_address === BTC_ADDRESS) {
+      satoshiReceived += out.value;
     }
   }
-  const date = new Date(tx.time * 1000);
+
+  const fee = tx.fee || 0;
+  const timestamp = tx.status?.block_time || Math.floor(Date.now() / 1000);
+  const date = new Date(timestamp * 1000);
   const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD
 
   return {
-    tx_hash: tx.hash,
+    tx_hash: tx.txid,
     date: dateStr,
-    timestamp: tx.time,
-    btc_received: satoshiToBTC(btcReceived),
-    gas_fee_btc: satoshiToBTC(tx.fee),
-    total_btc_spent: satoshiToBTC(btcReceived + tx.fee),
+    timestamp: timestamp,
+    btc_received: satoshiToBTC(satoshiReceived),
+    gas_fee_btc: satoshiToBTC(fee),
+    total_btc_spent: satoshiToBTC(satoshiReceived + fee),
   };
 }
 
@@ -100,15 +119,34 @@ async function fetchHistoricalPrice(dateStr) {
   const parts = dateStr.split('-');
   const cgDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
 
+  // Try CoinGecko first
   try {
     const res = await fetch(`https://api.coingecko.com/api/v3/coins/bitcoin/history?date=${cgDate}`);
-    if (!res.ok) throw new Error('CoinGecko rate limited');
+    if (!res.ok) throw new Error('CoinGecko error: ' + res.status);
     const data = await res.json();
     return Math.round(data.market_data.current_price.usd);
   } catch (err) {
-    console.warn(`Failed to fetch price for ${dateStr}:`, err);
-    return null;
+    console.warn(`CoinGecko failed for ${dateStr}:`, err.message);
   }
+
+  // Fallback: CoinCap API
+  try {
+    const startDate = new Date(dateStr);
+    const endDate = new Date(dateStr);
+    endDate.setDate(endDate.getDate() + 1);
+    const start = startDate.getTime();
+    const end = endDate.getTime();
+    const res = await fetch(`https://api.coincap.io/v2/assets/bitcoin/history?interval=d1&start=${start}&end=${end}`);
+    if (!res.ok) throw new Error('CoinCap error: ' + res.status);
+    const data = await res.json();
+    if (data.data && data.data.length > 0) {
+      return Math.round(parseFloat(data.data[0].priceUsd));
+    }
+  } catch (err) {
+    console.warn(`CoinCap failed for ${dateStr}:`, err.message);
+  }
+
+  return null;
 }
 
 // ===== MERGE KNOWN + NEW TRANSACTIONS =====
@@ -122,13 +160,14 @@ async function getAllTransactions() {
   // Step 2: Try to fetch from blockchain
   if (statusEl) statusEl.textContent = '🔍 Đang kiểm tra giao dịch mới từ blockchain...';
 
-  const blockchainTxs = await fetchTransactionsFromBlockchain();
+  const blockchainResult = await fetchTransactionsFromBlockchain();
 
-  if (blockchainTxs) {
+  if (blockchainResult) {
+    console.log(`📡 Using ${blockchainResult.source} API data`);
     // Find new transactions
     const newTxs = [];
-    for (const tx of blockchainTxs) {
-      if (!knownHashes.has(tx.hash)) {
+    for (const tx of blockchainResult.txs) {
+      if (!knownHashes.has(tx.txid)) {
         const parsed = parseTx(tx);
         if (parsed.btc_received > 0) {
           newTxs.push(parsed);
