@@ -1,4 +1,4 @@
-export const USDT_RATE_VND = 27500;
+export const USDT_RATE_VND = 27000;
 
 export const transactions = [
   {
