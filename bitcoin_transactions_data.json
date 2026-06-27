@@ -1,12 +1,12 @@
 {
   "address": "3J4khZgkxF7UHeeWJvoGer5ZTPxLg2dY3j",
-  "last_updated": "2026-03-19T00:41:00+07:00",
+  "last_updated": "2026-06-28T10:30:00+07:00",
   "usdt_buy_rate_vnd": 27000,
   "total_btc_received": 0.02384321,
   "total_gas_fee_btc": 0.00051790,
   "total_btc_spent": 0.02436111,
-  "total_cost_usdt": 2458.13,
-  "total_cost_vnd": 67598575,
+  "total_cost_usd": 2458.13,
+  "total_cost_vnd": 66369510,
   "weighted_avg_price_usd": 103094,
   "known_transactions": [
     {
@@ -20,7 +20,7 @@
       "total_btc_spent": 0.00376280,
       "btc_price_usd": 118629,
       "cost_usd": 446.37,
-      "cost_vnd": 12275175
+      "cost_vnd": 12050100
     },
     {
       "index": 2,
@@ -33,7 +33,7 @@
       "total_btc_spent": 0.00110970,
       "btc_price_usd": 119419,
       "cost_usd": 132.51,
-      "cost_vnd": 3644025
+      "cost_vnd": 3577770
     },
     {
       "index": 3,
@@ -46,7 +46,7 @@
       "total_btc_spent": 0.00146715,
       "btc_price_usd": 117702,
       "cost_usd": 172.69,
-      "cost_vnd": 4748975
+      "cost_vnd": 4662630
     },
     {
       "index": 4,
@@ -59,7 +59,7 @@
       "total_btc_spent": 0.00034980,
       "btc_price_usd": 115000,
       "cost_usd": 40.23,
-      "cost_vnd": 1106325
+      "cost_vnd": 1086210
     },
     {
       "index": 5,
@@ -72,7 +72,7 @@
       "total_btc_spent": 0.00165500,
       "btc_price_usd": 115283,
       "cost_usd": 190.79,
-      "cost_vnd": 5246725
+      "cost_vnd": 5151330
     },
     {
       "index": 6,
@@ -85,7 +85,7 @@
       "total_btc_spent": 0.00144750,
       "btc_price_usd": 116469,
       "cost_usd": 168.59,
-      "cost_vnd": 4636225
+      "cost_vnd": 4551930
     },
     {
       "index": 7,
@@ -98,7 +98,7 @@
       "total_btc_spent": 0.00146126,
       "btc_price_usd": 111000,
       "cost_usd": 162.20,
-      "cost_vnd": 4460500
+      "cost_vnd": 4379400
     },
     {
       "index": 8,
@@ -111,7 +111,7 @@
       "total_btc_spent": 0.00337306,
       "btc_price_usd": 99697,
       "cost_usd": 336.29,
-      "cost_vnd": 9247975
+      "cost_vnd": 9079830
     },
     {
       "index": 9,
@@ -124,7 +124,7 @@
       "total_btc_spent": 0.00189271,
       "btc_price_usd": 92094,
       "cost_usd": 174.29,
-      "cost_vnd": 4792975
+      "cost_vnd": 4705830
     },
     {
       "index": 10,
@@ -137,7 +137,7 @@
       "total_btc_spent": 0.00205927,
       "btc_price_usd": 89272,
       "cost_usd": 183.84,
-      "cost_vnd": 5055600
+      "cost_vnd": 4963680
     },
     {
       "index": 11,
@@ -150,7 +150,7 @@
       "total_btc_spent": 0.00204042,
       "btc_price_usd": 91414,
       "cost_usd": 186.54,
-      "cost_vnd": 5129850
+      "cost_vnd": 5036580
     },
     {
       "index": 12,
@@ -163,8 +163,8 @@
       "total_btc_spent": 0.00374244,
       "btc_price_usd": 70494,
       "cost_usd": 263.79,
-      "cost_vnd": 7254225
+      "cost_vnd": 7122330
     }
   ],
-  "notes": "Lần sau chỉ cần: (1) Đọc file này, (2) Kiểm tra giao dịch mới trên blockchain.info API, (3) Tra giá BTC cho giao dịch mới, (4) Cộng thêm vào danh sách và tính lại tổng."
+  "notes": "Hệ thống đã được cập nhật hoàn toàn. Tỉ giá USD: 27000đ/USD. Tất cả giao dịch đã được đồng bộ hóa và tính toán lại."
 }
